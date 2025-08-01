@@ -15,13 +15,43 @@ formCatalog.addEventListener("submit", (event) => {
 
     addBookTable(title, author, date);
     formCatalog.reset();
+
+    //Pegar dados no LocalStorage
+    const dateCatalog = JSON.parse(localStorage.getItem("dateCatalogBook"));
+
+    //Adicionar novo livro dentro do array de objetos
+    dateCatalog.push({
+        title: title,
+        author: author,
+        date: date
+    });
+    
+    //Armazena e atualizar no localStorage
+    localStorage.setItem("dateCatalogBook", JSON.stringify(dateCatalog));
+    
 });
+
 //Ver dados do formulário
 viewCatalogBtn.addEventListener("click", () => {
     formCatalog.style.display = "none";
     viewCatalogBtn.style.display = "none";
     container.style.width = "800px";
-    tableCatalog.style.display = "table"
+    tableCatalog.style.display = "table";
+
+    const getCatalogBook = JSON.parse(localStorage.getItem("dateCatalogBook"));
+
+    //Pecorre o array para ser mostrado no HTML
+    getCatalogBook.forEach((book) => {
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.date}</td>
+        `;
+
+        tableTbody.appendChild(newRow);
+    });
+
 });
 //Adicionando livro ao catálogo
 function addBookTable(title, author, date) {
