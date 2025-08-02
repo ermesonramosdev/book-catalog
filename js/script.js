@@ -7,13 +7,13 @@ const tableTbody = document.querySelector("#book-table tbody");
 //Pegar dados do formulário
 formCatalog.addEventListener("submit", (event) => {
     event.preventDefault();
-    const datas = new FormData(formCatalog);
 
+    const datas = new FormData(formCatalog);
     const title = datas.get("title");
     const author = datas.get("author");
     const date = datas.get("date");
 
-    addBookTable(title, author, date);
+    //Limpa o formulário
     formCatalog.reset();
 
     //Pegar dados no LocalStorage
@@ -31,13 +31,14 @@ formCatalog.addEventListener("submit", (event) => {
     
 });
 
-//Ver dados do formulário
+//Ver dados no formulário na tabela
 viewCatalogBtn.addEventListener("click", () => {
     formCatalog.style.display = "none";
     viewCatalogBtn.style.display = "none";
     container.style.width = "800px";
     tableCatalog.style.display = "table";
 
+    //Pego novamente os dados no LocalStorage para redenrizar na página.
     const getCatalogBook = JSON.parse(localStorage.getItem("dateCatalogBook"));
 
     //Pecorre o array para ser mostrado no HTML
@@ -47,20 +48,19 @@ viewCatalogBtn.addEventListener("click", () => {
             <td>${book.title}</td>
             <td>${book.author}</td>
             <td>${book.date}</td>
+            <td>
+                <i class="fa-solid fa-circle-xmark" style="color: #f00000; font-size: 30px; cursor: pointer"></i>
+            </td>
         `;
 
         tableTbody.appendChild(newRow);
     });
 
 });
-//Adicionando livro ao catálogo
-function addBookTable(title, author, date) {
-    const newRow = document.createElement("tr");
-    newRow.innerHTML = `
-        <td>${title}</td>
-        <td>${author}</td>
-        <td>${date}</td>
-    `;
 
-    tableTbody.appendChild(newRow);
-}
+//Evento de delete do botão
+tableTbody.addEventListener("click", (e) => {
+    if(e.target.classList.contains("fa-circle-xmark")) {
+        console.log("Teste do delete");
+    }
+});
