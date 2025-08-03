@@ -3,7 +3,16 @@ const formCatalog = document.querySelector("#form-catalog");
 const viewCatalogBtn = document.querySelector("#view-catalog-btn");
 const tableCatalog = document.querySelector("#book-table"); 
 const tableTbody = document.querySelector("#book-table tbody");
+const viewFormBtn = document.querySelector("#view-form-btn");
 
+window.addEventListener("load", () => {
+    const currentMode = localStorage.getItem("mode");
+
+    if(currentMode === "table") showTableView();
+    else {
+        showFormView();
+    }
+});
 //Pegar dados do formulário
 formCatalog.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -17,7 +26,8 @@ formCatalog.addEventListener("submit", (event) => {
     formCatalog.reset();
 
     //Pegar dados no LocalStorage
-    const dateCatalog = JSON.parse(localStorage.getItem("dateCatalogBook"));
+    const storedData = localStorage.getItem("dateCatalogBook");
+    const dateCatalog = storedData ? JSON.parse(storedData) : [];
 
     //Adicionar novo livro dentro do array de objetos
     dateCatalog.push({
@@ -30,13 +40,48 @@ formCatalog.addEventListener("submit", (event) => {
     localStorage.setItem("dateCatalogBook", JSON.stringify(dateCatalog));
     
 });
-
-//Ver dados no formulário na tabela
+//Evento de click para ver a tabela
 viewCatalogBtn.addEventListener("click", () => {
+    //Salvar qual função esta sendo exibida na página.
+    localStorage.setItem("mode", "table");
+    //Ver função
+    showTableView()
+});
+//Evento de delete do botão
+tableTbody.addEventListener("click", (e) => {
+    if(e.target.classList.contains("fa-circle-xmark")) {
+        localStorage.setItem("mode", "form")
+
+        const row = e.target.closest("tr");
+        const rows = Array.from(tableTbody.querySelectorAll("tr"));
+        const index = rows.indexOf(row);
+
+        const getCatalogBook = JSON.parse(localStorage.getItem("dateCatalogBook"));
+
+        getCatalogBook.splice(index, 1);
+
+        localStorage.setItem("dateCatalogBook", JSON.stringify(getCatalogBook));
+
+        row.remove();
+        
+        localStorage.setItem("mode", "table");
+        showTableView()
+    }
+});
+//Evento de click para ver o formulário
+viewFormBtn.addEventListener("click", () => {
+    localStorage.setItem("mode", "form");
+    showFormView()
+});
+//Ver a tabela
+function showTableView() {
     formCatalog.style.display = "none";
     viewCatalogBtn.style.display = "none";
+    viewFormBtn.style.display = "block";
     container.style.width = "800px";
     tableCatalog.style.display = "table";
+
+    tableTbody.innerHTML = "";
 
     //Pego novamente os dados no LocalStorage para redenrizar na página.
     const getCatalogBook = JSON.parse(localStorage.getItem("dateCatalogBook"));
@@ -55,12 +100,14 @@ viewCatalogBtn.addEventListener("click", () => {
 
         tableTbody.appendChild(newRow);
     });
-
-});
-
-//Evento de delete do botão
-tableTbody.addEventListener("click", (e) => {
-    if(e.target.classList.contains("fa-circle-xmark")) {
-        console.log("Teste do delete");
-    }
-});
+}
+//Ver formulário
+function showFormView() {
+    tableCatalog.style.display = "none";
+    formCatalog.style.display = "flex";
+    viewCatalogBtn.style.display = "block";
+    viewFormBtn.style.display = "block";
+    container.style.display = "block";
+    container.style.width = "400px";
+    viewFormBtn.style.display = "none";
+}

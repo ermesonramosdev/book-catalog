@@ -18,23 +18,22 @@ body {
     padding: 30px 40px;
     border-radius: 8px;
     box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    width: 350px;
 }
 
-.container form {
+.container form#form-catalog {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.container label {
+.container #form-catalog label {
     font-weight: 600;
     color: #333;
     margin-bottom: 5px;
 }
 
-.container input[type="text"],
-.container input[type="date"] {
+.container #form-catalog input[type="text"],
+.container #form-catalog input[type="date"] {
     padding: 10px 12px;
     border: 1.5px solid #ccc;
     border-radius: 5px;
@@ -42,8 +41,8 @@ body {
     transition: border-color 0.3s ease;
 }
 
-.container input[type="text"]:focus,
-.container input[type="date"]:focus {
+.container #form-catalog input[type="text"]:focus,
+.container #form-catalog input[type="date"]:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
